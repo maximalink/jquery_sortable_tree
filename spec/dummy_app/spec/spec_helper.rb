@@ -18,7 +18,7 @@ Capybara.configure do |config|
   # config.default_wait_time = 2
   # config.app_host    = '127.0.0.1'
   config.server_port = 3111
-end 
+end
 
 RSpec.configure do |config|
   Capybara.default_driver = :selenium

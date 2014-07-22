@@ -1,5 +1,5 @@
 class Admin::PagesController < ApplicationController
-  include TheSortableTreeController::Rebuild
+  include JquerySortableTreeController::Rebuild
 
   def index
     @pages = Admin::Page.nested_set.select('id, title, content, parent_id').limit(15)
@@ -19,11 +19,11 @@ class Admin::PagesController < ApplicationController
 
   def node_manage
     @root  = Admin::Page.root
-    @pages = @root.self_and_descendants.nested_set.select('id, title, content, parent_id').limit(15)
+    @pages = @root.self_and_descendants.nested_set.select('id, title, content, parent_id').limit(15) if @root
     render template: 'admin/pages/manage'
   end
 
-  protected 
+  protected
 
   def sortable_model
     Admin::Page

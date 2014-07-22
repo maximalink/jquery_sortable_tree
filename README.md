@@ -1,10 +1,12 @@
-# TheSortableTree
+# JquerySortableTree
 
-[![Gem Version](https://badge.fury.io/rb/the_sortable_tree.png)](http://badge.fury.io/rb/the_sortable_tree) [![Code Climate](https://codeclimate.com/github/the-teacher/the_sortable_tree.png)](https://codeclimate.com/github/the-teacher/the_sortable_tree)
+This gem is totally based on [the_sortable_tree](https://github.com/the-teacher/the_sortable_tree) gem.
+
+[![Gem Version](https://badge.fury.io/rb/jquery_sortable_tree.png)](http://badge.fury.io/rb/jquery_sortable_tree) [![Code Climate](https://codeclimate.com/github/maximalink/jquery_sortable_tree.png)](https://codeclimate.com/github/maximalink/jquery_sortable_tree)
 
 > tested with rails 4.1.0rc2 + haml 4
 
-Nested Set + Drag&Drop GUI. Very fast! Best render helper! **2000 nodes/sec**. Ready for rails 4 ([RubyGems](http://rubygems.org/gems/the_sortable_tree))
+Nested Set + Drag&Drop GUI. Very fast! Best render helper! **2000 nodes/sec**. Ready for rails 4 ([RubyGems](http://rubygems.org/gems/jquery_sortable_tree))
 
 ### Dummy Application
 
@@ -41,7 +43,7 @@ Awesome nested set, Nested set, Ruby, Rails, Nested set view helper, Sortable ne
 
 ```ruby
 gem 'awesome_nested_set' # or any similar gem (gem 'nested_set')
-gem "the_sortable_tree", "~> 2.5.0"
+gem "jquery_sortable_tree", "~> 2.5.0"
 ```
 
 Console
@@ -100,8 +102,8 @@ end
 
 ```ruby
 class Page < ActiveRecord::Base
-  include TheSortableTree::Scopes
-  
+  include JquerySortableTree::Scopes
+
   # any code here
 end
 ```
@@ -110,7 +112,7 @@ end
 
 ```ruby
 class PagesController < ApplicationController
-  include TheSortableTreeController::Rebuild
+  include JquerySortableTreeController::Rebuild
 
   def manage
     @pages = Page.nested_set.select('id, title, content, parent_id').all
@@ -228,31 +230,31 @@ Try to run next view generators:
 Render helpers for HTML tree generation
 
 ```ruby
-bundle exec rails g the_sortable_tree:views tree
-bundle exec rails g the_sortable_tree:views sortable
-bundle exec rails g the_sortable_tree:views nested_options
-bundle exec rails g the_sortable_tree:views indented_options
+bundle exec rails g jquery_sortable_tree:views tree
+bundle exec rails g jquery_sortable_tree:views sortable
+bundle exec rails g jquery_sortable_tree:views nested_options
+bundle exec rails g jquery_sortable_tree:views indented_options
 ```
 
 Base Render helper of gem
 
 ```ruby
-bundle exec rails g the_sortable_tree:views helper
+bundle exec rails g jquery_sortable_tree:views helper
 ```
 
 Assets of gem
 
 ```ruby
-bundle exec rails g the_sortable_tree:views assets
+bundle exec rails g jquery_sortable_tree:views assets
 ```
 
 ## I want to know more
 
-1. [How to change HTML code of tree?](https://github.com/the-teacher/the_sortable_tree/blob/master/docs/How_to_change_HTML_code_of_tree.md)
-2. [How to create new tree HTML Builder helper?](https://github.com/the-teacher/the_sortable_tree/blob/master/docs/How_to_create_new_tree_Render_Helper.md)
-3. [I need to render reversed tree](https://github.com/the-teacher/the_sortable_tree/blob/master/docs/I_need_to_render_reversed_tree.md)
-4. [Gem can't correctly define a Name of your Model](https://github.com/the-teacher/the_sortable_tree/blob/master/docs/How_to_correctly_define_a_Name_of_your_Model.md)
-5. [ChangeLog](https://github.com/the-teacher/the_sortable_tree/blob/master/docs/ChangeLog.md)
+1. [How to change HTML code of tree?](https://github.com/maximalink/jquery_sortable_tree/blob/master/docs/How_to_change_HTML_code_of_tree.md)
+2. [How to create new tree HTML Builder helper?](https://github.com/maximalink/jquery_sortable_tree/blob/master/docs/How_to_create_new_tree_Render_Helper.md)
+3. [I need to render reversed tree](https://github.com/maximalink/jquery_sortable_tree/blob/master/docs/I_need_to_render_reversed_tree.md)
+4. [Gem can't correctly define a Name of your Model](https://github.com/maximalink/jquery_sortable_tree/blob/master/docs/How_to_correctly_define_a_Name_of_your_Model.md)
+5. [ChangeLog](https://github.com/maximalink/jquery_sortable_tree/blob/master/docs/ChangeLog.md)
 
 ## Is it fast? Yes, it is!
 
@@ -279,10 +281,9 @@ Try to create view helpers for:
 
 ## I want to try! I need tests!
 
-1. I'm develop gem with test app [the_sortable_tree_test_app](https://github.com/the-teacher/the_sortable_tree_test_app). You can clone it and see some testcase-pages for gem
-2. Sorry, but I have not tests for this gem. Gem is so simple. It's easy to test only with test app.
-3. You can write some tests, if your need. I will be happy certainly.
-4. No! I know RSpec. I can write tests. But I have not reasons to write tests here.
+1. Sorry, but I have not tests for this gem. Gem is so simple. It's easy to test only with test app.
+2. You can write some tests, if you need. I will be happy certainly.
+3. No! I know RSpec. I can write tests. But I have not reasons to write tests here.
 
 ##  Аcknowledgment
 

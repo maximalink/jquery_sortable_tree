@@ -1,9 +1,9 @@
-## TheSortableTree Test Application 
+## JquerySortableTree Test Application
 
-#### Ruby 2.0.0p247 + Rails 4 + Haml 4 + the_sortable_tree (2.3.0)
+#### Ruby 2.0.0p247 + Rails 4 + Haml 4 + jquery_sortable_tree (2.5.0)
 
 
-### Install App and try to use TheSortableTree
+### Install App and try to use JquerySortableTree
 
 Create Database config file
 
@@ -35,11 +35,11 @@ Open browser
 localhost:3000
 ```
 
-### How to run tests for TheSortable tree
+### How to run tests for JquerySortable tree
 
 ```ruby
-git clone git@github.com:the-teacher/the_sortable_tree.git
-cd the_sortable_tree/spec/dummy_app/
+git clone git@github.com:maximalink/jquery_sortable_tree.git
+cd jquery_sortable_tree/spec/dummy_app/
 
 # cp config/database.yml.example config/database.yml
 

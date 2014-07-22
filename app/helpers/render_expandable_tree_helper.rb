@@ -7,7 +7,7 @@
 # or use h.html_escape(node.content)
 # for escape potentially dangerous content
 module RenderExpandableTreeHelper
-  module Render 
+  module Render
     class << self
       attr_accessor :h, :options
 
@@ -56,7 +56,6 @@ module RenderExpandableTreeHelper
           "<ol class='nested_set'>#{ options[:children] }</ol>"
         end
       end
-
     end
   end
 end

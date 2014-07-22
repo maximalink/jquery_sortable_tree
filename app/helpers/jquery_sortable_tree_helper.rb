@@ -1,4 +1,4 @@
-module TheSortableTreeHelper
+module JquerySortableTreeHelper
   # Publicated by MIT
   # Nested Set View Helper
 

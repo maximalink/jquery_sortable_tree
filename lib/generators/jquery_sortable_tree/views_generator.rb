@@ -1,4 +1,4 @@
-module TheSortableTree
+module JquerySortableTree
   module Generators
     class ViewsGenerator < Rails::Generators::NamedBase
       source_root File.expand_path('../../../../app/views', __FILE__)
@@ -6,14 +6,14 @@ module TheSortableTree
       def self.banner
 <<-BANNER.chomp
 
-bundle exec rails g the_sortable_tree:views tree
-bundle exec rails g the_sortable_tree:views sortable
-bundle exec rails g the_sortable_tree:views nested_options
-bundle exec rails g the_sortable_tree:views indented_options
+bundle exec rails g jquery_sortable_tree:views tree
+bundle exec rails g jquery_sortable_tree:views sortable
+bundle exec rails g jquery_sortable_tree:views nested_options
+bundle exec rails g jquery_sortable_tree:views indented_options
 
-bundle exec rails g the_sortable_tree:views helper
+bundle exec rails g jquery_sortable_tree:views helper
 
-bundle exec rails g the_sortable_tree:views assets
+bundle exec rails g jquery_sortable_tree:views assets
 
 BANNER
       end
@@ -43,7 +43,7 @@ BANNER
           copy_file "../helpers/render_indented_options_helper.rb", "app/helpers/render_indented_options_helper.rb"
         elsif param_name == 'helper'
           puts "Copy of base nested set render helper file"
-          copy_file "../helpers/the_sortable_tree_helper.rb", "app/helpers/the_sortable_tree_helper.rb"
+          copy_file "../helpers/jquery_sortable_tree_helper.rb", "app/helpers/jquery_sortable_tree_helper.rb"
         elsif param_name == 'assets'
           directory "../assets/javascripts", "app/assets/javascripts"
         else

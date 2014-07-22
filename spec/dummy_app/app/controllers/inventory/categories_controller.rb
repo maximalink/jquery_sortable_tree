@@ -1,5 +1,5 @@
 class Inventory::CategoriesController < ApplicationController
-  include TheSortableTreeController::Rebuild
+  include JquerySortableTreeController::Rebuild
 
   def index
     @inventory_categories = Inventory::Category.nested_set.all

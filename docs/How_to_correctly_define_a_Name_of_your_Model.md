@@ -11,7 +11,7 @@ For example you can write something like this:
 
 ```ruby
 class ManagersPagesController < ApplicationController
-  include TheSortableTreeController::Rebuild
+  include JquerySortableTreeController::Rebuild
 
   def manage
     @pages = Page.nested_set.select('id, title, content, parent_id').all

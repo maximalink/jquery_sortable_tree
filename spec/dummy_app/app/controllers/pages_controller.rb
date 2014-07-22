@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
-  include TheSortableTreeController::Rebuild
-  include TheSortableTreeController::ExpandNode
+  include JquerySortableTreeController::Rebuild
+  include JquerySortableTreeController::ExpandNode
 
   def index
     @pages = Page.nested_set.select('id, title, content, parent_id').limit(15)
@@ -20,7 +20,7 @@ class PagesController < ApplicationController
 
   def node_manage
     @root  = Page.root
-    @pages = @root.self_and_descendants.nested_set.select('id, title, content, parent_id').limit(15)
+    @pages = @root.self_and_descendants.nested_set.select('id, title, content, parent_id').limit(15) if @root
     render template: 'pages/manage'
   end
 

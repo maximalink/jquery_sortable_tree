@@ -10,11 +10,11 @@
 Use view generators
 
 ```ruby
-bundle exec rails g the_sortable_tree:views tree
+bundle exec rails g jquery_sortable_tree:views tree
 ```
 
 or
 
 ```ruby
-bundle exec rails g the_sortable_tree:views sortable
+bundle exec rails g jquery_sortable_tree:views sortable
 ```

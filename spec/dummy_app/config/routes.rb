@@ -1,9 +1,9 @@
-TheSortableTreeTest::Application.routes.draw do
+JquerySortableTreeTest::Application.routes.draw do
   get "category/index"
 
   get "category/manage"
 
-  root :to => 'welcome#index'
+  root to: 'welcome#index'
 
   resources :pages do
     collection do
