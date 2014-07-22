@@ -63,14 +63,14 @@ module JquerySortableTreeController
     include DefineVariablesMethod
 
     def rebuild
-      return render(nothing: true, status: :no_content) if move_to_nowhere?
-
-      if prev_id.zero? && next_id.zero?
-        object_to_rebuild.move_to_child_of sortable_model.find(parent_id)
-      elsif !prev_id.zero?
+      if move_to_nowhere?
+        return render(nothing: true, status: :no_content)
+      elsif prev_id > 0
         object_to_rebuild.send(move_to_prev, sortable_model.find(prev_id))
-      elsif !next_id.zero?
+      elsif next_id > 0
         object_to_rebuild.send(move_to_next, sortable_model.find(next_id))
+      else
+        object_to_rebuild.move_to_child_of(sortable_model.find(parent_id))
       end
 
       render(nothing: true, status: :ok)
