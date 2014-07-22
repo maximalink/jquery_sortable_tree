@@ -1,16 +1,17 @@
 module JquerySortableTreeController
   module DefineVariablesMethod
-    public
-    def the_define_common_variables
-      collection = self.class.to_s.split(':').last.sub(/Controller/,'').underscore.downcase                 # 'recipes'
-      collection = self.respond_to?(:sortable_collection) ? self.sortable_collection : collection           # 'recipes'
-      variable   = collection.singularize                                                                   # 'recipe'
-      klass      = self.respond_to?(:sortable_model) ? self.sortable_model : variable.classify.constantize  #  Recipe
-      ["@#{variable}", collection, klass]
+    def sortable_model
+      @sortable_model ||= self.class.to_s.split(':').last.sub(/Controller/, '').singularize.constantize
     end
-  end
 
-  module Params
+    def sortable_collection
+      @sortable_collection ||= self.class.to_s.split(':').last.sub(/Controller/,'').underscore.downcase
+    end
+
+    def the_define_common_variables
+      ["@#{sortable_collection.singularize}", sortable_collection, sortable_model]
+    end
+
     def id
       @id ||= params[:id].to_i
     end
@@ -20,7 +21,7 @@ module JquerySortableTreeController
     end
 
     def sort
-      @sort ||= 'reversed_nested_set' if params[:tree_sort] == 'reversed'
+      @sort ||= params[:tree_sort] == 'reversed' ? 'reversed_nested_set' : 'nested_set'
     end
 
     def prev_id
@@ -31,6 +32,10 @@ module JquerySortableTreeController
       @next_id ||= params[:next_id].to_i
     end
 
+    def object_to_rebuild
+      self.sortable_model.find(id)
+    end
+
     def move_to_nowhere?
       parent_id.zero? && prev_id.zero? && next_id.zero?
     end
@@ -38,36 +43,26 @@ module JquerySortableTreeController
 
   module ExpandNode
     include DefineVariablesMethod
-    include Params
 
     def expand_node
-      return render(nothing: true, status: :no_content) unless id
-
-      variable, collection, klass = self.the_define_common_variables
-      variable  = self.instance_variable_set(variable, klass.find(id))
-      @children = variable.children.send(sort)
-
-      return render(nothing: true, status: :no_content) if @children.count.zero?
-      render layout: false, template: "#{collection}/expand_node"
+      @children = object_to_rebuild.children.send(sort) if id && sort
+      return render(nothing: true, status: :no_content) if !@children || @children.count.zero?
+      render layout: false, template: "#{sortable_collection}/expand_node"
     end
   end
 
   module Rebuild
     include DefineVariablesMethod
-    include Params
 
     def rebuild
       return render(nothing: true, status: :no_content) if move_to_nowhere?
 
-      variable, collection, klass = the_define_common_variables
-      variable = instance_variable_set(variable, klass.find(id))
-
       if prev_id.zero? && next_id.zero?
-        variable.move_to_child_of klass.find(parent_id)
+        object_to_rebuild.move_to_child_of sortable_model.find(parent_id)
       elsif !prev_id.zero?
-        variable.move_to_right_of klass.find(prev_id)
+        object_to_rebuild.move_to_right_of sortable_model.find(prev_id)
       elsif !next_id.zero?
-        variable.move_to_left_of klass.find(next_id)
+        object_to_rebuild.move_to_left_of sortable_model.find(next_id)
       end
 
       render(nothing: true, status: :ok)
@@ -76,20 +71,16 @@ module JquerySortableTreeController
 
   module ReversedRebuild
     include DefineVariablesMethod
-    include Params
 
     def rebuild
       return render(nothing: true, status: :no_content) if move_to_nowhere?
 
-      variable, collection, klass = the_define_common_variables
-      variable = instance_variable_set(variable, klass.find(id))
-
       if prev_id.zero? && next_id.zero?
-        variable.move_to_child_of klass.find(parent_id)
+        object_to_rebuild.move_to_child_of sortable_model.find(parent_id)
       elsif !prev_id.zero?
-        variable.move_to_left_of klass.find(prev_id)
+        object_to_rebuild.move_to_left_of sortable_model.find(prev_id)
       elsif !next_id.zero?
-        variable.move_to_right_of klass.find(next_id)
+        object_to_rebuild.move_to_right_of sortable_model.find(next_id)
       end
 
       render(nothing: true, status: :ok)
