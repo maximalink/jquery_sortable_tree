@@ -7,55 +7,50 @@
 # or use h.html_escape(node.content)
 # for escape potentially dangerous content
 module RenderSortableTreeHelper
-  module Render 
+  module Render
     class << self
       attr_accessor :h, :options
 
       def render_node(h, options)
         @h, @options = h, options
         node = options[:node]
-
-        "
-          <li data-node-id='#{ node.id }'>
-            <div class='item'>
-              <i class='handle'></i>
-              #{ show_link }
-              #{ controls }
-            </div>
-            #{ children }
-          </li>
-        "
+        div_item = h.content_tag(:div, handle + edit_link + controls, class: :item)
+        return h.content_tag(:li, div_item + children,
+          class: :node,
+          data: {
+            node_id: node.id,
+            parent_id: node.parent_id
+          }
+        )
       end
 
-      def show_link
-        node = options[:node]
-        ns   = options[:namespace]
-        url = h.url_for(:controller => options[:klass].pluralize, :action => :show, :id => node)
-        title_field = options[:title]
+      def handle
+        h.content_tag(:i, '', class: :handle)
+      end
 
-        "<h4>#{ h.link_to(node.send(title_field), url) }</h4>"
+      def edit_link
+        h.content_tag(:h4, h.link_to(options[:node].send(options[:title]), show_path, class: :edit))
       end
 
       def controls
-        node = options[:node]
-
-        edit_path = h.url_for(:controller => options[:klass].pluralize, :action => :edit, :id => node)
-        destroy_path = h.url_for(:controller => options[:klass].pluralize, :action => :destroy, :id => node)
-
-        "
-          <div class='controls'>
-            #{ h.link_to '', edit_path, :class => :edit }
-            #{ h.link_to '', destroy_path, :class => :delete, :method => :delete, :data => { :confirm => 'Are you sure?' } }
-          </div>
-        "
+        link_options = {
+          class: :delete,
+          method: :delete,
+          data: {
+            confirm: I18n.t('are_you_sure', default: 'Are you sure?'),
+            remote: true
+          }
+        }
+        h.content_tag(:div, h.link_to('', show_path, link_options), class: :controls)
       end
 
       def children
-        unless options[:children].blank?
-          "<ol class='nested_set'>#{ options[:children] }</ol>"
-        end
+        h.content_tag(:ol, options[:children].html_safe, class: :nested_set) unless options[:children].blank?
       end
 
+      def show_path
+        h.url_for(controller: options[:klass].pluralize, action: :show, id: options[:node], format: :json)
+      end
     end
   end
 end
