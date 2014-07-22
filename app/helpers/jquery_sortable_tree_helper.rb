@@ -1,7 +1,4 @@
 module JquerySortableTreeHelper
-  # Publicated by MIT
-  # Nested Set View Helper
-
   # Ilya Zykin, zykin-ilya@ya.ru, Russia [Ivanovo, Saint Petersburg] 2009-2014
   # github.com/the-teacher
 
@@ -69,23 +66,33 @@ module JquerySortableTreeHelper
     }
   end
 
-  def build_server_tree(tree, options = {})
-    tree = [*tree]
+  def build_children(tree, opts)
+    children = (opts[:boost][opts[:node].id.to_i] || [])
+    children.reduce('') { |r, elem| r + build_server_tree(tree, opts.merge(node: elem, root: false, level: opts[:level].next)) }
+  end
+
+  def roots(tree)
+    min_parent_id = tree.map(&:parent_id).compact.min
+    tree.select { |e| e.parent_id == min_parent_id }
+  end
+
+  def merge_base_options(tree, options)
     opts = base_options.merge(options)
     opts[:namespace] = [*opts[:namespace]]
     opts[:render_module] ||= TREE_RENDERERS[opts[:type]]
     opts[:klass] ||= define_class_of_elements_of(tree)
     opts[:boost] ||= tree.group_by { |item| item.parent_id.to_i }
+    opts
+  end
+
+  def build_server_tree(tree, options = {})
+    tree = [*tree]
+    opts = merge_base_options(tree, options)
 
     if opts[:node]
-      children = (opts[:boost][opts[:node].id.to_i] || [])
-      children_res = children.reduce('') { |r, elem| r + build_server_tree(tree, opts.merge(node: elem, root: false, level: opts[:level].next)) }
-      #children_res = opts[:boost][opts[:node].id.to_i].inspect
-      raw build_tree_html(self, opts[:render_module], opts.merge(children: children_res))
+      raw build_tree_html(self, opts[:render_module], opts.merge(children: build_children(tree, opts)))
     else
-      min_parent_id = tree.map(&:parent_id).compact.min
-      roots = tree.select { |e| e.parent_id == min_parent_id }
-      raw (roots || []).reduce('') { |r, root| r + build_server_tree(tree, opts.merge(node: root, root: true, level: opts[:level].next)) }
+      raw (roots(tree) || []).reduce('') { |r, root| r + build_server_tree(tree, opts.merge(node: root, root: true, level: opts[:level].next)) }
     end
   end
 end
