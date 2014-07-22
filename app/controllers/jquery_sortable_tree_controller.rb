@@ -32,6 +32,14 @@ module JquerySortableTreeController
       @next_id ||= params[:next_id].to_i
     end
 
+    def move_to_prev
+      @move_to_prev ||= params[:tree_sort] == 'reversed' ? :move_to_left_of : :move_to_right_of
+    end
+
+    def move_to_next
+      @move_to_next ||= params[:tree_sort] == 'reversed' ? :move_to_right_of : :move_to_left_of
+    end
+
     def object_to_rebuild
       self.sortable_model.find(id)
     end
@@ -60,27 +68,9 @@ module JquerySortableTreeController
       if prev_id.zero? && next_id.zero?
         object_to_rebuild.move_to_child_of sortable_model.find(parent_id)
       elsif !prev_id.zero?
-        object_to_rebuild.move_to_right_of sortable_model.find(prev_id)
+        object_to_rebuild.send(move_to_prev, sortable_model.find(prev_id))
       elsif !next_id.zero?
-        object_to_rebuild.move_to_left_of sortable_model.find(next_id)
-      end
-
-      render(nothing: true, status: :ok)
-    end
-  end
-
-  module ReversedRebuild
-    include DefineVariablesMethod
-
-    def rebuild
-      return render(nothing: true, status: :no_content) if move_to_nowhere?
-
-      if prev_id.zero? && next_id.zero?
-        object_to_rebuild.move_to_child_of sortable_model.find(parent_id)
-      elsif !prev_id.zero?
-        object_to_rebuild.move_to_left_of sortable_model.find(prev_id)
-      elsif !next_id.zero?
-        object_to_rebuild.move_to_right_of sortable_model.find(next_id)
+        object_to_rebuild.send(move_to_next, sortable_model.find(next_id))
       end
 
       render(nothing: true, status: :ok)

@@ -5,13 +5,12 @@ module JquerySortableTreeHelper
   # Ilya Zykin, zykin-ilya@ya.ru, Russia [Ivanovo, Saint Petersburg] 2009-2014
   # github.com/the-teacher
 
-  # Default renderers
   TREE_RENDERERS = {
-    :tree     => RenderTreeHelper,
-    :sortable => RenderSortableTreeHelper,
-    :expandable => RenderExpandableTreeHelper,
-    :nested_options => RenderNestedOptionsHelper,
-    :indented_options => RenderIndentedOptionsHelper
+    tree: RenderTreeHelper,
+    sortable: RenderSortableTreeHelper,
+    expandable: RenderExpandableTreeHelper,
+    nested_options: RenderNestedOptionsHelper,
+    indented_options: RenderIndentedOptionsHelper
   }
 
   ###############################################
@@ -58,94 +57,35 @@ module JquerySortableTreeHelper
   # Server Side Render Tree Helper
   ###############################################
 
-  def build_server_tree(tree, options= {})
-    result = ''
-    tree   = Array.wrap tree
-    opts   = {
-      # node and base node params
-      :id    => :id,      # node id field
-      :title => :title,   # name of title fileld
-      :node  => nil,      # node
+  def base_options
+    {
+      id: :id,
+      title: :title,
+      node: nil,
+      type: :tree,
+      root: false,
+      level: 0,
+      namespace: []
+    }
+  end
 
-      # base options
-      :type  => :tree,    # tree type
-      :root  => false,    # is it root node?
-      :level => 0,        # recursion level
-      :namespace => [],   # :admin
+  def build_server_tree(tree, options = {})
+    tree = [*tree]
+    opts = base_options.merge(options)
+    opts[:namespace] = [*opts[:namespace]]
+    opts[:render_module] ||= TREE_RENDERERS[opts[:type]]
+    opts[:klass] ||= define_class_of_elements_of(tree)
+    opts[:boost] ||= tree.group_by { |item| item.parent_id.to_i }
 
-      # BOOST! hash
-      :boost => {} 
-    }.merge!(options)
-
-    # Basic vars
-    root = opts[:root]
-    node = opts[:node]
-
-    # namespace prepare [Rails require]
-    opts[:namespace] = Array.wrap opts[:namespace]
-
-    # Module with **Render** class
-    opts[:render_module] = TREE_RENDERERS[opts[:type]] unless opts[:render_module]
-
-    # Define tree class
-    opts[:klass] = define_class_of_elements_of(tree) unless opts[:klass]
-
-    # BOOST PATCH (BUILD ONCE)
-    # solution of main perfomance problem
-    # magick index-hash, which made me happy!
-
-    # Performance comparison
-    # Boost OFF: 8000 nodes, 3 levels => (Views: 176281.9ms | ActiveRecord: 189.8ms)
-    # Boost  ON: 8000 nodes, 3 levels => (Views: 8987.8ms   | ActiveRecord: 141.6ms)
-
-    if opts[:boost].empty?
-      tree.each do |item|
-        num = item.parent_id || 0
-        opts[:boost][num.to_s] = [] unless opts[:boost][num.to_s]
-        opts[:boost][num.to_s].push item
-      end
-    end
-
-    unless node
-      # RENDER ROOTS
-      roots = opts[:boost]['0']
-
-      # Boost OFF
-      # roots = tree.select{ |node| node.parent_id.blank? }
-
-      # define roots, if it's need
-      if roots.nil? && !tree.empty?
-        min_parent_id = tree.map(&:parent_id).compact.min
-        roots = tree.select{ |elem| elem.parent_id == min_parent_id }
-      end
-
-      # children rendering
-      if roots
-        roots.each do |root|
-          _opts  =  opts.merge({ :node => root, :root => true, :level => opts[:level].next, :boost => opts[:boost] })
-          result << build_server_tree(tree, _opts)
-        end
-      end
+    if opts[:node]
+      children = (opts[:boost][opts[:node].id.to_i] || [])
+      children_res = children.reduce('') { |r, elem| r + build_server_tree(tree, opts.merge(node: elem, root: false, level: opts[:level].next)) }
+      #children_res = opts[:boost][opts[:node].id.to_i].inspect
+      raw build_tree_html(self, opts[:render_module], opts.merge(children: children_res))
     else
-      # RENDER NODE'S CHILDREN
-      children_res = ''
-      children = opts[:boost][node.id.to_s]
-
-      # Boost OFF
-      # children = tree.select{ |_node| _node.parent_id == node.id } 
-
-      opts.merge!({ :has_children => children.blank? })
-
-      unless children.nil?
-        children.each do |elem|
-          _opts        =  opts.merge({ :node => elem, :root => false, :level => opts[:level].next, :boost => opts[:boost] })
-          children_res << build_server_tree(tree, _opts)
-        end
-      end
-
-      result << build_tree_html(self, opts[:render_module], opts.merge({ :root => root, :node => node, :children => children_res }))
+      min_parent_id = tree.map(&:parent_id).compact.min
+      roots = tree.select { |e| e.parent_id == min_parent_id }
+      raw (roots || []).reduce('') { |r, root| r + build_server_tree(tree, opts.merge(node: root, root: true, level: opts[:level].next)) }
     end
-
-    raw result
   end
 end
