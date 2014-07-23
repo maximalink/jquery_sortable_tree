@@ -7,39 +7,15 @@
 # or use h.html_escape(node.content)
 # for escape potentially dangerous content
 module RenderTreeHelper
-  class Render
-    class << self
-      attr_accessor :h, :options
+  class Render < RenderSortableTreeHelper::Render
+    attr_accessor :h, :options
 
-      def render_node(h, options)
-        @h, @options = h, options
+    def initialize(h, options)
+      @h, @options = h, options
+    end
 
-        node = options[:node]
-        "
-          <li>
-            <div class='item'>
-              #{ show_link }
-            </div>
-            #{ children }
-          </li>
-        "
-      end
-
-      def show_link
-        node = options[:node]
-        ns   = options[:namespace]
-        url  = h.url_for(ns + [node])
-        title_field = options[:title]
-
-        "<h4>#{ h.link_to(node.send(title_field), url) }</h4>"
-      end
-
-      def children
-        unless options[:children].blank?
-          "<ol>#{ options[:children] }</ol>"
-        end
-      end
-
+    def div_item
+      h.content_tag(:div, show_link, class: :item)
     end
   end
 end

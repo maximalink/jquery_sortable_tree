@@ -23,31 +23,31 @@ module JquerySortableTreeHelper
   end
 
   def build_tree_html context, render_module, options = {}
-    render_module::Render::render_node(self, options)
+    render_module::Render.new(self, options).render_node
   end
 
   ###############################################
   # Shortcuts
   ###############################################
   
-  def just_tree tree, options = {}
-    build_server_tree(tree, { :type => :tree }.merge!(options))
+  def just_tree(tree, options = {})
+    build_server_tree(tree, { type: :tree }.merge!(options))
   end
 
-  def sortable_tree tree, options = {}
-    build_server_tree(tree, { :type => :sortable }.merge!(options))
+  def sortable_tree(tree, options = {})
+    build_server_tree(tree, { type: :sortable }.merge!(options))
   end
 
-  def nested_options tree, options = {}
-    build_server_tree(tree, { :type => :nested_options }.merge!(options))
+  def nested_options(tree, options = {})
+    build_server_tree(tree, { type: :nested_options }.merge!(options))
   end
 
-  def indented_options tree, options = {}
-    build_server_tree(tree, { :type => :indented_options }.merge!(options))
+  def indented_options(tree, options = {})
+    build_server_tree(tree, { type: :indented_options }.merge!(options))
   end
 
-  def expandable_tree tree, options = {}
-    build_server_tree(tree, { :type => :expandable }.merge!(options))
+  def expandable_tree(tree, options = {})
+    build_server_tree(tree, { type: :expandable }.merge!(options))
   end
 
   ###############################################

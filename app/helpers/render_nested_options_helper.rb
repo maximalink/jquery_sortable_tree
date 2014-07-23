@@ -1,23 +1,27 @@
 module RenderNestedOptionsHelper
   class Render
-    class << self
-      attr_accessor :h, :options
+    attr_accessor :h, :options
 
-      def render_node(h, options)
-        @h, @options = h, options
+    def initialize(h, options)
+      @h, @options = h, options
+    end
 
-        node = options[:node]
+    def render_node
+      @h.content_tag(:option, options[:node].send(options[:title]), tag_options) + children
+    end
 
-        this_node      = options[:selected] == node
-        selected_class = this_node ? ' selected' : nil
-        selected       = this_node ? " selected='selected'" : nil
+    def children
+      @options[:children].html_safe
+    end
 
-        "
-        <option value='#{node[:id]}' class='l_#{ options[:level] }#{selected_class}' #{selected}>#{ node.send(options[:title]) }</option>
-        #{ options[:children] }
-        "
+    def tag_options
+      opts = { class: "l_#{@options[:level]}", value: @options[:node][:id] }
+
+      if @options[:selected] == @options[:node]
+        opts[:class] += ' selected'
+        opts[:selected] = :selected
       end
-
+      opts
     end
   end
 end

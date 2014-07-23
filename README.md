@@ -69,9 +69,13 @@ Sortable GUI require JQuery libs
 Add next JS only for Sortable GUI
 
 ```ruby
-//= require jquery.ui.nestedSortable
 //= require sortable_tree/initializer
 ```
+
+or Extendable GUI:
+
+```ruby
+//= require expandable_tree/initializer
 
 #### Stylesheets
 
@@ -80,6 +84,7 @@ Add next JS only for Sortable GUI
 ```ruby
 *= require tree
 *= require sortable_tree
+*= require expandable_tree
 *= require nested_options
 ```
 
