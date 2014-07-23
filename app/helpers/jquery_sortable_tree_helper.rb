@@ -29,13 +29,37 @@ module JquerySortableTreeHelper
   ###############################################
   # Shortcuts
   ###############################################
-  
+
   def just_tree(tree, options = {})
     build_server_tree(tree, { type: :tree }.merge!(options))
   end
 
   def sortable_tree(tree, options = {})
-    build_server_tree(tree, { type: :sortable }.merge!(options))
+    base_data = {
+        model: tree.first.class.to_s.underscore,
+        title: 'title',
+        max_levels: 5,
+        parent_id: params[:parent_id],
+        rebuild_url: send("rebuild_#{tree.first.class.to_s.pluralize.underscore}_url")
+    }
+    add_new_node_form(base_data.merge(options)) +
+    content_tag(:ol, build_server_tree(tree, { type: :sortable }.merge!(options)),
+                class: 'sortable_tree',
+                data: base_data.merge(options.slice(:parent_id, :model, :rebuild_url, :title, :max_levels))
+    )
+  end
+
+  def add_new_node_form(options)
+    capture do
+      form_for(options[:model].to_sym, html: { id: "new-#{options[:model]}-form" },
+                                       url: send("#{options[:model].pluralize}_path", format: :json),
+                                       method: :post,
+                                       remote: true) do |f|
+        concat f.text_field options[:title].to_sym, required: true,
+                     placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
+        concat f.hidden_field :parent_id, value: options[:parent_id]
+      end
+    end
   end
 
   def nested_options(tree, options = {})

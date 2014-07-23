@@ -1,15 +1,15 @@
 $ ->
   # Adding new item to the list
-  $('#new-category-form').on 'ajax:success', (event, data, status, xhr) ->
+  $('ol.sortable_tree').siblings('form').on 'ajax:success', (event, data, status, xhr) ->
     sortable_tree = $(this).siblings('ol.sortable_tree')
-    $(this).find('#category_title').val('')
+    $(this).find('input').val('')
     list_item = sortable_tree.children('li:first').clone()
     list_item.find('ol.nested_set').remove()
     list_item.find('h4 > a').text(data.name)
     list_item.find('a.delete').attr 'href', (index, attr) ->
       attr.replace(list_item.data('node-id'), data.id)
     list_item.data('node-id', data.id)
-    list_item.appendTo('ol.sortable_tree')
+    list_item.appendTo(sortable_tree)
 
   # remove items that deleted
   $('a.delete').on 'ajax:success', -> $('div.item').has($(this)).parent().remove()
@@ -24,7 +24,7 @@ $ ->
     url = $(this).attr('href')
     text = $(this).text()
     edit_box = $('<input type="text" id="#edit_box" data-url="' +
-      url + '" value="' + text + '" style="width: 200px;" class="form-control"/>')
+      url + '" value="' + text + '" style="width: 200px;" class="form-control" />')
     edit_box.appendTo(h4.parent())
     edit_box.focus()
 
@@ -39,7 +39,7 @@ $ ->
         data = {}
         attributes = {}
         title_field = 'title'
-        title_field = sortable_tree.data('title-field') if sortable_tree.data('title-field')
+        title_field = sortable_tree.data('title') if sortable_tree.data('title')
         attributes[title_field] = edit_box.val()
         data[sortable_tree.data('model')] = attributes
         $.ajax(

@@ -43,7 +43,7 @@ Awesome nested set, Nested set, Ruby, Rails, Nested set view helper, Sortable ne
 
 ```ruby
 gem 'awesome_nested_set' # or any similar gem (gem 'nested_set')
-gem "jquery_sortable_tree", "~> 2.5.0"
+gem 'jquery_sortable_tree', '~> 3.0.0'
 ```
 
 Console
@@ -316,4 +316,4 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+W
