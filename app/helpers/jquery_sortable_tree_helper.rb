@@ -34,14 +34,18 @@ module JquerySortableTreeHelper
     build_server_tree(tree, { type: :tree }.merge!(options))
   end
 
-  def sortable_tree(tree, options = {})
-    base_data = {
-        model: tree.first.class.to_s.underscore,
-        title: 'title',
-        max_levels: 5,
-        parent_id: params[:parent_id],
-        rebuild_url: send("rebuild_#{tree.first.class.to_s.pluralize.underscore}_url")
+  def base_data(tree)
+    {
+      model: tree.first.class.to_s.underscore,
+      title: 'title',
+      max_levels: 5,
+      parent_id: params[:parent_id],
+      rebuild_url: send("rebuild_#{tree.first.class.to_s.pluralize.underscore}_url")
     }
+  end
+
+  def sortable_tree(tree, options = {})
+    base_data = base_data(tree)
     add_new_node_form(base_data.merge(options)) +
     content_tag(:ol, build_server_tree(tree, { type: :sortable }.merge!(options)),
                 class: 'sortable_tree',
@@ -49,12 +53,18 @@ module JquerySortableTreeHelper
     )
   end
 
+  def form_for_options(options)
+    {
+      html: { id: "new-#{options[:model]}-form" },
+      url: send("#{options[:model].pluralize}_path", format: :json),
+      method: :post,
+      remote: true
+    }
+  end
+
   def add_new_node_form(options)
     capture do
-      form_for(options[:model].to_sym, html: { id: "new-#{options[:model]}-form" },
-                                       url: send("#{options[:model].pluralize}_path", format: :json),
-                                       method: :post,
-                                       remote: true) do |f|
+      form_for(options[:model].to_sym, form_for_options(options)) do |f|
         concat f.text_field options[:title].to_sym, required: true,
                      placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
         concat f.hidden_field :parent_id, value: options[:parent_id]
