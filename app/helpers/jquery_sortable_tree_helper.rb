@@ -66,7 +66,7 @@ module JquerySortableTreeHelper
     capture do
       form_for(options[:model].to_sym, form_for_options(options)) do |f|
         concat f.text_field options[:title].to_sym, required: true,
-                     placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
+                            placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
         concat f.hidden_field :parent_id, value: options[:parent_id]
       end
     end
