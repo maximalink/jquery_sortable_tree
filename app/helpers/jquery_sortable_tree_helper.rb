@@ -1,14 +1,13 @@
 module JquerySortableTreeHelper
   # Ilya Zykin, zykin-ilya@ya.ru, Russia [Ivanovo, Saint Petersburg] 2009-2014
   # github.com/the-teacher
-
   TREE_RENDERERS = {
     tree: RenderTreeHelper,
     sortable: RenderSortableTreeHelper,
     expandable: RenderExpandableTreeHelper,
     nested_options: RenderNestedOptionsHelper,
     indented_options: RenderIndentedOptionsHelper
-  }
+  }.freeze
 
   ###############################################
   # Common Base Methods
@@ -23,7 +22,7 @@ module JquerySortableTreeHelper
   end
 
   def build_tree_html context, render_module, options = {}
-    render_module::Render.new(self, options).render_node
+    render_module::Render.new(context, options).render_node
   end
 
   ###############################################
@@ -34,19 +33,29 @@ module JquerySortableTreeHelper
     build_server_tree(tree, { type: :tree }.merge!(options))
   end
 
-  def base_data(tree)
+  def base_data
     {
-      model: tree.first.class.to_s.underscore,
+      model: params[:controller].singularize,
       title: 'title',
       max_levels: 5,
       parent_id: params[:parent_id],
-      rebuild_url: send("rebuild_#{tree.first.class.to_s.pluralize.underscore}_url")
+      rebuild_url: send("rebuild_#{params[:controller]}_url"),
+      url: url_for(controller: params[:controller], action: :show, id: ':id', format: :json)
     }
   end
 
+  def space(height)
+    content_tag(:div, '&nbsp;'.html_safe, style: "height: #{height}px;")
+  end
+
+  def fake_node(options)
+    OpenStruct.new(options[:title] => '', id: ':id', children: nil)
+  end
+
   def sortable_tree(tree, options = {})
-    base_data = base_data(tree)
+    space(20) +
     add_new_node_form(base_data.merge(options)) +
+    content_tag(:ol, build_tree_html(self, TREE_RENDERERS[:sortable], base_options.merge(options).merge({ node: fake_node(options) })), class: 'fake-node hidden', style: 'display: none;') +
     content_tag(:ol, build_server_tree(tree, { type: :sortable }.merge!(options)),
                 class: 'sortable_tree',
                 data: base_data.merge(options.slice(:parent_id, :model, :rebuild_url, :title, :max_levels))
@@ -65,8 +74,8 @@ module JquerySortableTreeHelper
   def add_new_node_form(options)
     capture do
       form_for(options[:model].to_sym, form_for_options(options)) do |f|
-        concat f.text_field options[:title].to_sym, required: true,
-                            placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
+        title_field = f.text_field options[:title].to_sym, required: true, class: 'form-control', placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
+        concat content_tag(:div, title_field, class: 'form-group')
         concat f.hidden_field :parent_id, value: options[:parent_id]
       end
     end
@@ -96,7 +105,8 @@ module JquerySortableTreeHelper
       type: :tree,
       root: false,
       level: 0,
-      namespace: []
+      namespace: [],
+      controller: params[:controller]
     }
   end
 
