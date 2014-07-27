@@ -76,6 +76,7 @@ or Extendable GUI:
 
 ```ruby
 //= require expandable_tree/initializer
+```
 
 #### Stylesheets
 
