@@ -9,12 +9,6 @@
 module JquerySortableTreeHelper
   module RenderTreeHelper
     class Render < JquerySortableTreeHelper::RenderSortableTreeHelper::Render
-      attr_accessor :h, :options
-
-      def initialize(h, options)
-        @h, @options = h, options
-      end
-
       def div_item
         h.content_tag(:div, show_link, class: :item)
       end

@@ -1,12 +1,6 @@
 module JquerySortableTreeHelper
   module RenderNestedOptionsHelper
-    class Render
-      attr_accessor :h, :options
-
-      def initialize(h, options)
-        @h, @options = h, options
-      end
-
+    class Render < JquerySortableTreeHelper::RenderSortableTreeHelper::Render
       def render_node
         @h.content_tag(:option, options[:node].send(options[:title]), tag_options) + children
       end
