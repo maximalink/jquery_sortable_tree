@@ -4,7 +4,7 @@ pkg/*
 spec/dummy_app/config/database.yml
 spec/dummy_app/db/*.db
 spec/dummy_app/log/*.log
-.Gemfile.lock
+Gemfile.lock
 
 .DS_Store
 *.sublime-workspace
