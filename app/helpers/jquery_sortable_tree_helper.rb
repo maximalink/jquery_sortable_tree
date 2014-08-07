@@ -6,7 +6,8 @@ module JquerySortableTreeHelper
     sortable: RenderSortableTreeHelper,
     expandable: RenderExpandableTreeHelper,
     nested_options: RenderNestedOptionsHelper,
-    indented_options: RenderIndentedOptionsHelper
+    indented_options: RenderIndentedOptionsHelper,
+    optgroup: RenderOptgroupHelper
   }.freeze
 
   ###############################################
@@ -49,6 +50,7 @@ module JquerySortableTreeHelper
   end
 
   def fake_node(options)
+    options[:title] ||= 'title'
     OpenStruct.new(options[:title] => '', id: ':id', children: nil)
   end
 
@@ -82,15 +84,19 @@ module JquerySortableTreeHelper
   end
 
   def nested_options(tree, options = {})
-    build_server_tree(tree, { type: :nested_options }.merge!(options))
+    build_server_tree(tree, { type: :nested_options }.merge(options))
   end
 
   def indented_options(tree, options = {})
-    build_server_tree(tree, { type: :indented_options }.merge!(options))
+    build_server_tree(tree, { type: :indented_options }.merge(options))
   end
 
   def expandable_tree(tree, options = {})
-    build_server_tree(tree, { type: :expandable }.merge!(options))
+    build_server_tree(tree, { type: :expandable }.merge(options))
+  end
+
+  def optgroup(tree, options = {})
+    build_server_tree(tree, { type: :optgroup }.merge(options))
   end
 
   ###############################################
