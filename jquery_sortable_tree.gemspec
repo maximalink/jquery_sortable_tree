@@ -22,4 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sqlite3', '~> 1.3'
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'rspec-rails', '~> 3.0'
+  s.add_development_dependency 'capybara'
+  s.add_development_dependency 'faker'
+  s.add_development_dependency 'awesome_nested_set', '~> 3.0.0.rc5'
 end

@@ -29,6 +29,10 @@ Nested Set + Drag&Drop GUI. Very fast! Best render helper! **2000 nodes/sec**. R
 
 ![Indented options](docs/indented_options.jpg)
 
+## Render Optgroup
+
+![Optgroup](docs/optgroup.jpg)
+
 ## Expandable tree
 
 ![Expandable](docs/expandable.jpg)
@@ -160,6 +164,25 @@ build_server_tree(tree, options)
 **nested_options** is just alias of **build_server_tree(tree, type: :nested_options)**
 
 This uses CSS styling, for indenting with spaces, use **indented_options** instead.
+
+## Render Indented Options Tree
+
+```haml
+= select_tag :page_id, indented_options(@pages, :selected => Page.last)
+```
+
+**indented_options** is just alias of **build_server_tree(tree, type: :indented_options)**
+
+## Render Optgroup Tree
+
+```haml
+= select_tag :page_id, optgroup(@pages, :selected => Page.last)
+```
+
+**optgroup** is just alias of **build_server_tree(tree, type: :indented_options)**
+The only difference between **indented_options** and **optgroup** is the selectable of parent nodes.
+Indented options allows to select parent nodes, but optgroup does not. 
+
 
 
 ## build_server_tree options
