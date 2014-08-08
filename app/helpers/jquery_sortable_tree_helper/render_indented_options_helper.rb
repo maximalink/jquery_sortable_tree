@@ -1,12 +1,6 @@
 module JquerySortableTreeHelper
   module RenderIndentedOptionsHelper
-    class Render
-      attr_accessor :h, :options
-
-      def initialize(h, options)
-        @h, @options = h, options
-      end
-
+    class Render < JquerySortableTreeHelper::RenderSortableTreeHelper::Render
       def render_node
         h.content_tag(:option, title, tag_options) + children
       end
@@ -23,10 +17,6 @@ module JquerySortableTreeHelper
           html_options[:class] = 'selected'
         end
         html_options
-      end
-
-      def node
-        @options[:node]
       end
 
       def children

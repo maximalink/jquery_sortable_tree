@@ -1,17 +1,17 @@
 JquerySortableTreeTest::Application.routes.draw do
-  get "category/index"
-
-  get "category/manage"
+  get 'category/index'
+  get 'category/manage'
 
   root to: 'welcome#index'
 
   resources :pages do
     collection do
-      get  :nested_options
-      get  :indented_options
-      get  :manage
-      get  :node_manage
-      get  :expand
+      get :nested_options
+      get :indented_options
+      get :optgroup
+      get :manage
+      get :node_manage
+      get :expand
 
       post :rebuild
       post :expand_node
@@ -21,7 +21,7 @@ JquerySortableTreeTest::Application.routes.draw do
   namespace :admin do
     resources :pages do
       collection do
-        get  :nested_options, :indented_options, :manage, :node_manage
+        get  :nested_options, :indented_options, :optgroup, :manage, :node_manage
         post :rebuild
       end
     end
@@ -42,12 +42,4 @@ JquerySortableTreeTest::Application.routes.draw do
       end
     end
   end
-
-  # resources :comments do
-  #   collection do
-  #     post :rebuild
-  #     get  :manage
-  #     get  :comments
-  #   end
-  # end
 end

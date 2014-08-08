@@ -1,20 +1,21 @@
 class Admin::PagesController < ApplicationController
   include JquerySortableTreeController::Rebuild
 
+  before_action :load_pages, only: [:index, :manage, :nested_options, :indented_options, :optgroup]
+
   def index
-    @pages = Admin::Page.nested_set.select('id, title, content, parent_id').limit(15)
   end
 
   def manage
-    @pages = Admin::Page.nested_set.select('id, title, content, parent_id').limit(15)
   end
 
   def nested_options
-    @pages = Admin::Page.nested_set.select('id, title, content, parent_id').limit(15)
   end
 
   def indented_options
-    @pages = Admin::Page.nested_set.select('id, title, content, parent_id').limit(15)
+  end
+
+  def optgroup
   end
 
   def node_manage
@@ -24,6 +25,10 @@ class Admin::PagesController < ApplicationController
   end
 
   protected
+
+  def load_pages
+    @pages = Admin::Page.nested_set.select('id, title, content, parent_id').limit(15)
+  end
 
   def sortable_model
     Admin::Page

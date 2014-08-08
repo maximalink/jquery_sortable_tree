@@ -18,7 +18,7 @@ module JquerySortableTreeHelper
       def render_node
         return h.content_tag(:li, div_item + children,
           class: :node,
-          data: { node_id: options[:node].id }
+          data: { node_id: node.id }
         )
       end
 
@@ -31,13 +31,13 @@ module JquerySortableTreeHelper
       end
 
       def edit_link
-        h.content_tag(:h4, h.link_to(options[:node].send(options[:title]), show_path, class: :edit))
+        h.content_tag(:h4, h.link_to(node.send(options[:title]), show_path, class: :edit))
       end
 
       def show_link
         h.content_tag(:h4,
-                      h.link_to(options[:node].send(options[:title]),
-                      h.url_for(options[:namespace] + [options[:node]]))
+                      h.link_to(node.send(options[:title]),
+                      h.url_for(options[:namespace] + [node]))
         )
       end
 
@@ -55,6 +55,10 @@ module JquerySortableTreeHelper
 
       def children
         h.content_tag(:ol, options[:children].html_safe, class: :nested_set) unless options[:children].blank?
+      end
+
+      def node
+        @options[:node]
       end
 
       def show_path

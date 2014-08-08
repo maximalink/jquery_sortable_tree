@@ -1,16 +1,21 @@
 require 'spec_helper'
 require 'build_tree_helper'
 
-describe "pages/index" do
+describe 'pages/index' do
   include Capybara::DSL
 
   before(:all) do
     Benchmark.bm do |b|
-      b.report{
-        Page.all.each{|p| begin; p.destroy; rescue; end; }
-      }
+      b.report do
+        Page.all.each do |p|
+          begin
+            p.destroy
+          rescue
+          end
+        end
+      end
     end
-    puts "DB Cleaning"
+    puts 'DB Cleaning'
 
     # sleep 3
 
@@ -25,22 +30,21 @@ describe "pages/index" do
         build_test_tree Page, 10
       }
     end
-    puts "Tree Building"
-
+    puts 'Tree Building'
   end
 
-  it "render all pages without capybara" do
+  it 'render all pages without capybara' do
     assign :pages, Page.all
     render
   end
 
-  it "pages/index" do
+  it 'pages/index' do
     visit '/pages'
     nodes = all('li', visible: true)
     nodes.count.should be 15
   end
 
-  it "pages/manage all pages" do
+  it 'pages/manage all pages' do
     visit '/pages/manage'
     nodes = all('li', visible: true)
     nodes.count.should be 1110

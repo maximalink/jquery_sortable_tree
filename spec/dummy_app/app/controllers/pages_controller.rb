@@ -2,16 +2,18 @@ class PagesController < ApplicationController
   include JquerySortableTreeController::Rebuild
   include JquerySortableTreeController::ExpandNode
 
+  before_action :load_pages, only: [:index, :nested_options, :indented_options, :optgroup]
+
   def index
-    @pages = Page.nested_set.select('id, title, content, parent_id').limit(15)
   end
 
   def nested_options
-    @pages = Page.nested_set.select('id, title, content, parent_id').limit(15)
   end
 
   def indented_options
-    @pages = Page.nested_set.select('id, title, content, parent_id').limit(15)
+  end
+
+  def optgroup
   end
 
   def manage
@@ -26,5 +28,11 @@ class PagesController < ApplicationController
 
   def expand
     @pages = Page.nested_set.roots.select('id, title, content, parent_id')
+  end
+
+  private
+
+  def load_pages
+    @pages = Page.nested_set.select('id, title, content, parent_id').limit(15)
   end
 end
