@@ -54,14 +54,19 @@ module JquerySortableTreeHelper
     OpenStruct.new(options[:title] => '', id: ':id', children: nil)
   end
 
-  def sortable_tree(tree, options = {})
-    space(20) +
-    add_new_node_form(base_data.merge(options)) +
-    content_tag(:ol, build_tree_html(self, TREE_RENDERERS[:sortable], base_options.merge(options).merge({ node: fake_node(options) })), class: 'fake-node hidden', style: 'display: none;') +
-    content_tag(:ol, build_server_tree(tree, { type: :sortable }.merge!(options)),
+  def fake_sortable_ol_tag(options)
+    content_tag(:ol, build_tree_html(self, TREE_RENDERERS[:sortable], base_options.merge(options).merge({ node: fake_node(options) })), class: 'fake-node hidden', style: 'display: none;')
+  end
+
+  def real_sortable_ol_tag(tree, options)
+    content_tag(:ol, build_server_tree(tree, { type: :sortable }.merge(options)),
                 class: 'sortable_tree',
                 data: base_data.merge(options.slice(:parent_id, :model, :rebuild_url, :title, :max_levels))
     )
+  end
+
+  def sortable_tree(tree, options = {})
+    space(20) + add_new_node_form(base_data.merge(options)) + fake_sortable_ol_tag(options) + real_sortable_ol_tag(tree, options)
   end
 
   def form_for_options(options)
