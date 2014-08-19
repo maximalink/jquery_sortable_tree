@@ -50,7 +50,7 @@ $ ->
     list_item.appendTo(sortable_tree)
 
   # remove items that deleted
-  $('ol.sortable_tree').on 'ajax:success', '.controls a.delete', -> $(this).parent().parent().remove()
+  $('ol.sortable_tree').on 'ajax:success', '.controls a.delete', -> $(this).parent().parent().parent().remove()
 
   # edit clicked item
   $('ol.sortable_tree').on 'click', 'h4 > a.edit', @edit_node
