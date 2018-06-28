@@ -40,7 +40,7 @@ $ ->
   # Adding new item to the list
   $('ol.sortable_tree').siblings('form').on 'ajax:success', (event, data, status, xhr) ->
     sortable_tree = $(this).siblings('ol.sortable_tree')
-    $(this).find('input').val('')
+    $(this).find('input').not('input[type=hidden]').val('')
     list_item = $(this).siblings('ol.fake-node').find('li.node').clone()
     list_item.find('h4 > a').text(data.name)
     list_item.find('a.delete, a.edit').attr 'href', (index, attr) ->
