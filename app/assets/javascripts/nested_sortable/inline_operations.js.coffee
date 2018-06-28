@@ -47,7 +47,15 @@ $ ->
       attr.replace(':id', data.id)
     list_item.data('node-id', data.id)
     list_item.attr('data-node-id', data.id)
-    list_item.appendTo(sortable_tree)
+    if (data.left_of)
+      target_element = sortable_tree.find("[data-node-id=#{data.left_of}]")
+    else
+      target_element = false
+
+    if target_element
+      list_item.insertBefore(target_element)
+    else
+      list_item.appendTo(sortable_tree)
 
   # remove items that deleted
   $('ol.sortable_tree').on 'ajax:success', '.controls a.delete', -> $(this).parent().parent().parent().remove()
