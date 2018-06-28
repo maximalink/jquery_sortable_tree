@@ -76,7 +76,7 @@ module JquerySortableTreeController
 
     def expand_node
       @children = object_to_rebuild.children.send(sort) if id && sort
-      return render(nothing: true, status: :no_content) if !@children || @children.count.zero?
+      return render({ json: { status: :no_content } }, status: :no_content) if !@children || @children.count.zero?
       render layout: false, template: "#{sortable_collection}/expand_node"
     end
   end
@@ -85,9 +85,9 @@ module JquerySortableTreeController
     include DefineVariablesMethod
 
     def rebuild
-      return render(nothing: true, status: :no_content) if move_to_nowhere?
+      return render({ json: { status: :no_content } }, status: :no_content) if move_to_nowhere?
       object_to_rebuild.send(move_to, node)
-      render(nothing: true, status: :ok)
+      render({ json: { status: :no_content } }, status: :ok)
     end
   end
 end
