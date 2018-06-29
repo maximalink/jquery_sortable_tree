@@ -7,7 +7,7 @@ $ ->
     $(this).hide()
     url = $(this).attr('href')
     text = $(this).text()
-    edit_box = $("<input type='text' id='#edit_box' data-url='#{url}' value='#{text}' style='width: 200px;' class='form-control' />")
+    edit_box = $("<input type='text' id='#edit_box' data-url='#{url}' value='#{text}' style='width: 200px;' class='form-control' maxlength='255'/>")
     edit_box.appendTo(h4.parent())
     edit_box.focus()
     edit_done = ->

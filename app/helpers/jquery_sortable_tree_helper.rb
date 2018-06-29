@@ -81,7 +81,7 @@ module JquerySortableTreeHelper
   def add_new_node_form(options)
     capture do
       form_for(options[:model].to_sym, form_for_options(options)) do |f|
-        title_field = f.text_field options[:title].to_sym, required: true, class: 'form-control', placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}")
+        title_field = f.text_field options[:title].to_sym, required: true, class: 'form-control', placeholder: I18n.t('sortable_tree.title_of_new_node', default: "The #{options[:title]} of new #{options[:model]}"), maxlength: 255
         concat content_tag(:div, title_field, class: 'form-group')
         concat f.hidden_field :parent_id, value: options[:parent_id]
       end
