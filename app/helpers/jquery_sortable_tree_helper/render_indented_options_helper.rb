@@ -26,7 +26,7 @@ module JquerySortableTreeHelper
       private
 
       def node_selected?(selected, node)
-        selected.present? && node.present? && ((selected.is_a?(Enumerble) && (selected.include?(node.id) || selected.include?(node))) || selected == node || selected == node.id)
+        selected.present? && node.present? && ((selected.is_a?(Enumerable) && (selected.include?(node.id) || selected.include?(node))) || selected == node || selected == node.id)
       end
     end
   end
