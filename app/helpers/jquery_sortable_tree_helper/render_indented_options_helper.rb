@@ -6,13 +6,13 @@ module JquerySortableTreeHelper
       end
 
       def title
-        "\u202f" * (@options[:spacing] || 3).to_i * (@options[:level]-1) + node.send(@options[:title])
+        "\u202f" * (@options[:spacing] || 3).to_i * (@options[:level] - 1) + node.send(@options[:title])
       end
 
       def tag_options
         html_options = { value: node.id }
 
-        if options[:selected] == node
+        if node_selected?(options[:selected], node)
           html_options[:selected] = 'selected'
           html_options[:class] = 'selected'
         end
@@ -21,6 +21,12 @@ module JquerySortableTreeHelper
 
       def children
         @options[:children].html_safe
+      end
+
+      private
+
+      def node_selected?(selected, node)
+        selected.present? && node.present? && ((selected.is_a?(Enumerble) && (selected.include?(node.id) || selected.include?(node))) || selected == node || selected == node.id)
       end
     end
   end
